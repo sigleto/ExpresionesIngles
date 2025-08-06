@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import phrases from '../data/phrases.json';
 
 type Phrase = {
@@ -34,7 +41,7 @@ export default function ExpressionTrainer() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Entrenador de Expresiones</Text>
+      <Text style={styles.title}>🎯 Entrenador de Expresiones</Text>
 
       <View style={styles.buttonsRow}>
         <CustomButton text="¿Qué quiere decir?" onPress={handleEnToEs} />
@@ -54,9 +61,11 @@ export default function ExpressionTrainer() {
           )}
 
           {showAnswer && (
-            <Text style={styles.answer}>
-              {currentMode === 'enToEs' ? currentPair.es : currentPair.en}
-            </Text>
+            <View style={styles.answerBox}>
+              <Text style={styles.answer}>
+                {currentMode === 'enToEs' ? currentPair.es : currentPair.en}
+              </Text>
+            </View>
           )}
         </>
       )}
@@ -64,42 +73,71 @@ export default function ExpressionTrainer() {
   );
 }
 
-// ✅ Componente reutilizable para botón estilizado
 function CustomButton({ text, onPress }: { text: string; onPress: () => void }) {
+  const scale = useState(new Animated.Value(1))[0];
+
+  const handlePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.96,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
-    <Pressable style={styles.button} onPress={onPress}>
-      <Text style={styles.buttonText}>{text}</Text>
-    </Pressable>
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <Pressable
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={styles.button}
+        onPress={onPress}
+      >
+        <Text style={styles.buttonText}>{text}</Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    gap: 20,
+    gap: 24,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f0f4f8',
+    minHeight: '100%',
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
+    color: '#1a237e',
     textAlign: 'center',
+    marginBottom: 10,
   },
   buttonsRow: {
     flexDirection: 'row',
-    gap: 12,
     flexWrap: 'wrap',
+    gap: 12,
     justifyContent: 'center',
   },
   button: {
-    backgroundColor: '#4a90e2',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginVertical: 5,
-    elevation: 2,
+    backgroundColor: '#5c6bc0',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    elevation: 5,
   },
   buttonText: {
     color: '#fff',
@@ -108,23 +146,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   card: {
-    backgroundColor: '#f2f2f2',
-    padding: 24,
-    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    padding: 30,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#ddd',
-    width: '100%',
-    maxWidth: 350,
+    width: '90%',
+    maxWidth: 360,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 4,
   },
   expression: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '700',
     textAlign: 'center',
-    color: '#222',
+    color: '#263238',
+  },
+  answerBox: {
+    backgroundColor: '#e8f5e9',
+    borderRadius: 12,
+    padding: 20,
+    marginTop: 16,
+    width: '85%',
+    borderWidth: 1,
+    borderColor: '#a5d6a7',
   },
   answer: {
     fontSize: 20,
-    marginTop: 16,
     color: '#2e7d32',
     fontWeight: '600',
     textAlign: 'center',

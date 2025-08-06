@@ -10,6 +10,7 @@ export default function HomeScreen() {
 }
 
 // ✅ Oculta la cabecera (evita que se vea "index")
-export const options = {
-  
+
+HomeScreen.options = {
+  headerShown: false,
 };
