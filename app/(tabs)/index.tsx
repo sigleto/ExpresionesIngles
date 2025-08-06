@@ -53,6 +53,8 @@ export default function HomeScreen() {
       </ThemedView>
     </ParallaxScrollView>
   );
+ 
+
 }
 
 const styles = StyleSheet.create({
@@ -73,3 +75,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
+;
+
+export const screenOptions = {
+  headerShown: false
+};

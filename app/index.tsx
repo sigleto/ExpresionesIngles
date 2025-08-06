@@ -8,3 +8,8 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
+
+// ✅ Oculta la cabecera (evita que se vea "index")
+export const options = {
+  
+};

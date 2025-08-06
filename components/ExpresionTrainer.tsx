@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import phrases from '../data/phrases.json';
 
 type Phrase = {
@@ -34,19 +34,23 @@ export default function ExpressionTrainer() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Button title="¿Qué quiere decir?" onPress={handleEnToEs} />
-      <Button title="¿Cómo se dice?" onPress={handleEsToEn} />
+      <Text style={styles.title}>Entrenador de Expresiones</Text>
+
+      <View style={styles.buttonsRow}>
+        <CustomButton text="¿Qué quiere decir?" onPress={handleEnToEs} />
+        <CustomButton text="¿Cómo se dice?" onPress={handleEsToEn} />
+      </View>
 
       {currentPair && (
         <>
-          <View style={styles.textContainer}>
+          <View style={styles.card}>
             <Text style={styles.expression}>
               {currentMode === 'enToEs' ? currentPair.en : currentPair.es}
             </Text>
           </View>
 
           {!showAnswer && (
-            <Button title="Respuesta" onPress={handleShowAnswer} />
+            <CustomButton text="Mostrar respuesta" onPress={handleShowAnswer} />
           )}
 
           {showAnswer && (
@@ -60,25 +64,69 @@ export default function ExpressionTrainer() {
   );
 }
 
+// ✅ Componente reutilizable para botón estilizado
+function CustomButton({ text, onPress }: { text: string; onPress: () => void }) {
+  return (
+    <Pressable style={styles.button} onPress={onPress}>
+      <Text style={styles.buttonText}>{text}</Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    gap: 15,
+    padding: 24,
+    gap: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textContainer: {
-    marginTop: 20,
-  },
-  expression: {
-    fontSize: 24,
+  title: {
+    fontSize: 26,
     fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
     textAlign: 'center',
   },
-  answer: {
+  buttonsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: '#4a90e2',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginVertical: 5,
+    elevation: 2,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#f2f2f2',
+    padding: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    width: '100%',
+    maxWidth: 350,
+  },
+  expression: {
     fontSize: 22,
-    marginTop: 10,
-    color: 'green',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#222',
+  },
+  answer: {
+    fontSize: 20,
+    marginTop: 16,
+    color: '#2e7d32',
+    fontWeight: '600',
     textAlign: 'center',
   },
 });
